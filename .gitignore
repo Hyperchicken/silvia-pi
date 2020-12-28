@@ -5,3 +5,4 @@ PID.*
 kill.sh
 restart.sh
 *.debug.js
+__pycache__/

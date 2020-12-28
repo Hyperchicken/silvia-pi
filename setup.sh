@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 SCRIPT=$(readlink -f "$0")
 echo $SCRIPT
 BASEDIR=$(dirname "$SCRIPT")
@@ -12,10 +11,7 @@ if [[ $(whoami) != 'root' ]]; then
   exit -1
 fi
 
-apt-get -y install rpi-update git build-essential python-dev python-smbus python-pip logrotate
-
-echo "Installing logrotate config..."
-cp $BASEDIR/silvia-pi-logrotate /etc/logrotate.d
+apt-get -y install rpi-update git build-essential python-dev python-smbus python-pip
 
 echo "Installing ivPID library..."
 git clone https://github.com/ivmech/ivPID.git

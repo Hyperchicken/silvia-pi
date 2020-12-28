@@ -1,5 +1,5 @@
-bottle
-cheroot
+asyncio
+aiohttp
 RPi.GPIO
 spidev
 schedule

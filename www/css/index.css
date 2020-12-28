@@ -1,0 +1,12 @@
+#boilerstatus {
+  height: 14px;
+  width: 14px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#boilerstatus.on {
+  background-color: #F00;
+}
