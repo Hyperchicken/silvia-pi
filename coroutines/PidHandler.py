@@ -49,7 +49,10 @@ class PidHandler:
 
   async def pid_loop(self):
     while True:
-      temp = self.temperature_sensor.get_temperature()
+      try:
+        temp = self.temperature_sensor.get_temperature()
+      except:
+        continue
 
       self.temphist.popleft()
       self.temphist.append(temp)
