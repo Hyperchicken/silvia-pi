@@ -5,6 +5,7 @@ if __name__ == '__main__':
   import asyncio
   import logging
   import pickle
+  import sys
   from aiohttp import web
   from hardware import boiler, temperature_sensor
   from coroutines.HeatingElementController import HeatingElementController
@@ -13,7 +14,7 @@ if __name__ == '__main__':
 
   log = logging.getLogger("asyncio")
   logging.basicConfig(level=logging.DEBUG)
-  set_point = pickle.load( open( "./setpoint.p", "rb" ) )["set_point"]
+  set_point = pickle.load( open( sys.path[0] + "/setpoint.p", "rb" ) )["set_point"]
 
   loop = asyncio.get_event_loop()
 
@@ -31,4 +32,7 @@ if __name__ == '__main__':
   asyncio.ensure_future(pid_handler.pid_loop())
   asyncio.ensure_future(heating_element_controller.update_he_from_pid())
   asyncio.ensure_future(web.run_app(web_server), port = conf.port)
-  loop.run_forever()
+  try:
+    loop.run_forever()
+  finally:
+    del boiler

@@ -28,12 +28,12 @@ class PidHandler:
     self.sample_time = sample_time
 
   def set_set_point(self, set_point):
-    import pickle
+    import pickle, sys
 
     self.cpid.SetPoint = set_point
     self.wpid.SetPoint = set_point
     self.set_point = set_point
-    pickle.dump({"set_point": set_point}, open( "./setpoint.p", "wb" ))
+    pickle.dump({"set_point": set_point}, open(str(sys.path[0]) + "/setpoint.p", "wb" ))
 
   def update(self, avg_temp):
     if self.cold:
