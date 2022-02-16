@@ -12,7 +12,7 @@ if [[ $(whoami) != 'root' ]]; then
   exit -1
 fi
 
-apt-get -y install rpi-update git build-essential python-dev python-smbus python-pip logrotate
+apt-get -y install rpi-update git build-essential python3-dev python3-smbus python3-pip logrotate
 
 echo "Installing logrotate config..."
 cp $BASEDIR/silvia-pi-logrotate /etc/logrotate.d
