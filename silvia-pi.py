@@ -337,8 +337,8 @@ def oled_display(dummy, state):
   # Move left to right keeping track of the current x position for drawing shapes.
   x = 0
 
-  # Load default font.
-  font = ImageFont.load_default()
+  # font = ImageFont.load_default()
+  font = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 9)
 
   draw.text((x, top+0), "CoffeePi", font=font, fill=255)
 
