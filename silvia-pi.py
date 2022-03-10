@@ -349,8 +349,8 @@ def oled_display(dummy, state):
 
   def coffee_anim(x, y, frame):
     draw.rectangle((0+x, 7+y, 9+x, 13+y), outline=0, fill=255)
-    draw.line(((2+x, 14+y), (7+x, 14+y)), fill=255)
-    #draw.rectangle((0+x, 13+y, 9+x, 15+y), outline=0, fill=255)
+    draw.line(((2+x, 13+y), (7+x, 13+y)), fill=255)
+    draw.line(((1+x, 16+y), (8+x, 16+y)), fill=255)
     draw.point((9+x, 9+y), fill=255)
     draw.point((10+x, 9+y), fill=255)
     draw.point((10+x, 10+y), fill=255)
