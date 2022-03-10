@@ -347,6 +347,58 @@ def oled_display(dummy, state):
 
   heartbeat = 0
 
+  def coffee_anim(x, y, frame):
+    draw.rectangle((0+x, 7+y, 8+x, 11+y), outline=0, fill=255)
+    draw.rectangle((1+x, 12+y, 7+x, 12+y), outline=0, fill=255)
+    draw.rectangle((1+x, 12+y, 7+x, 12+y), outline=0, fill=255)
+    #draw.point((9+x, 8+y), 255)
+    #draw.point((9+x, 10+y))
+    draw.line(((9+x, 8+y), (10+x, 8+y), (10+x, 10+y), (9+x, 10+y)), fill=255, width=1)
+    if frame == 0:
+      draw.point((1+x, 0+y), fill=255)
+      draw.point((1+x, 1+y), fill=255)
+      draw.point((2+x, 2+y), fill=255)
+      draw.point((2+x, 3+y), fill=255)
+      draw.point((1+x, 4+y), fill=255)
+      draw.point((1+x, 5+y), fill=255)
+
+      draw.point((4+x, 0+y), fill=255)
+      draw.point((4+x, 1+y), fill=255)
+      draw.point((5+x, 2+y), fill=255)
+      draw.point((5+x, 3+y), fill=255)
+      draw.point((4+x, 4+y), fill=255)
+      draw.point((4+x, 5+y), fill=255)
+      
+      draw.point((7+x, 0+y), fill=255)
+      draw.point((7+x, 1+y), fill=255)
+      draw.point((8+x, 2+y), fill=255)
+      draw.point((8+x, 3+y), fill=255)
+      draw.point((7+x, 4+y), fill=255)
+      draw.point((7+x, 5+y), fill=255)
+    
+    elif frame == 1:
+      draw.point((2+x, 0+y), fill=255)
+      draw.point((2+x, 1+y), fill=255)
+      draw.point((1+x, 2+y), fill=255)
+      draw.point((1+x, 3+y), fill=255)
+      draw.point((2+x, 4+y), fill=255)
+      draw.point((2+x, 5+y), fill=255)
+
+      draw.point((5+x, 0+y), fill=255)
+      draw.point((5+x, 1+y), fill=255)
+      draw.point((4+x, 2+y), fill=255)
+      draw.point((4+x, 3+y), fill=255)
+      draw.point((5+x, 4+y), fill=255)
+      draw.point((5+x, 5+y), fill=255)
+      
+      draw.point((8+x, 0+y), fill=255)
+      draw.point((8+x, 1+y), fill=255)
+      draw.point((7+x, 2+y), fill=255)
+      draw.point((7+x, 3+y), fill=255)
+      draw.point((8+x, 4+y), fill=255)
+      draw.point((8+x, 5+y), fill=255)
+      
+
   while True:
     currentTemp = str(round(state['avgtemp'],1))
 
@@ -354,10 +406,12 @@ def oled_display(dummy, state):
     draw.text((x, top+0), "Boiler Temp:", font=fontDefault, fill=255)
     draw.text((x+8, top+8), currentTemp+" C", font=font2, fill=255)
     if heartbeat == 0:
-      draw.rectangle((96, 16, 104, 24), outline=0, fill=255)
+      #draw.rectangle((96, 16, 104, 24), outline=0, fill=255)
+      coffee_anim(96, 16, 0)
       heartbeat = 1
     else:
-      draw.rectangle((104, 16 , 112, 24), outline=0, fill=255)
+      #draw.rectangle((104, 16 , 112, 24), outline=0, fill=255)
+      coffee_anim(96, 16, 1)
       heartbeat = 0
     disp.image(image)
     disp.show()
