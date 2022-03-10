@@ -337,20 +337,28 @@ def oled_display(dummy, state):
   # Move left to right keeping track of the current x position for drawing shapes.
   x = 0
 
-  # font = ImageFont.load_default()
-  font = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 16)
+  fontDefault = ImageFont.load_default()
+  font2 = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 32)
 
-  draw.text((x, top+0), "CoffeePi", font=font, fill=255)
+  draw.text((x, top+0), "CoffeePi", font=fontDefault, fill=255)
 
   disp.image(image)
   disp.show()
 
+  heartbeat = 0
+
   while True:
-    currentTemp = str(state['avgtemp'])
+    currentTemp = str(round(state['avgtemp'],1))
 
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    draw.text((x, top+0), "CoffeePi", font=font, fill=255)
-    draw.text((x, top+16), "Boiler: "+currentTemp+"C", font=font, fill=255)
+    draw.text((x, top+0), "Boiler Temp:", font=fontDefault, fill=255)
+    draw.text((x+8, top+8), currentTemp+" C", font=font2, fill=255)
+    if heartbeat == 0:
+      draw.rectangle((96, 16, 104, 24), outline=0, fill=255)
+      heartbeat = 1
+    else:
+      draw.rectangle((104, 16 , 112, 24), outline=0, fill=255)
+      heartbeat = 0
     disp.image(image)
     disp.show()
 
