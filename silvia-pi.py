@@ -347,8 +347,13 @@ def oled_display(dummy, state):
 
   while True:
     currentTemp = str(state['avgtemp'])
+
+    disp.fill(0)
     draw.text((x, top+0), "CoffeePi", font=font, fill=255)
     draw.text((x, top+16), "Boiler: "+currentTemp+"C", font=font, fill=255)
+    disp.image(image)
+    disp.show()
+    
     sleep(0.5)
 
   return '';
