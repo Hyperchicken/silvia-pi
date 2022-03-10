@@ -338,7 +338,7 @@ def oled_display(dummy, state):
   x = 0
 
   # font = ImageFont.load_default()
-  font = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 9)
+  font = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 16)
 
   draw.text((x, top+0), "CoffeePi", font=font, fill=255)
 
