@@ -63,7 +63,8 @@ def he_control_loop(dummy,state):
   from time import sleep
   import RPi.GPIO as GPIO
   import config as conf
-
+  
+  GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(conf.he_pin, GPIO.OUT)
   GPIO.output(conf.he_pin,0)
@@ -305,6 +306,61 @@ def rest_server(dummy,state):
     print("running the server now...",file=fweb)
     run(host='0.0.0.0',port=conf.port,server='cheroot')
 
+def rotary_encoder(dummy, state):
+  """I2C rotary encoder NeoPixel color picker and brightness setting example."""
+  import board
+  from rainbowio import colorwheel
+  from adafruit_seesaw import seesaw, neopixel, rotaryio, digitalio
+
+
+  # For use with the STEMMA connector on QT Py RP2040
+  # import busio
+  # i2c = busio.I2C(board.SCL1, board.SDA1)
+  # seesaw = seesaw.Seesaw(i2c, 0x36)
+
+  seesaw = seesaw.Seesaw(board.I2C(), 0x36)
+
+  encoder = rotaryio.IncrementalEncoder(seesaw)
+  seesaw.pin_mode(24, seesaw.INPUT_PULLUP)
+  switch = digitalio.DigitalIO(seesaw, 24)
+
+  pixel = neopixel.NeoPixel(seesaw, 6, 1)
+  pixel.brightness = 0.5
+
+  last_position = -1
+  color = 0  # start at red
+
+  while True:
+
+      # negate the position to make clockwise rotation positive
+      position = -encoder.position
+      setTemp = state['settemp']
+
+      if position != last_position:
+          print(setTemp)
+
+          if switch.value:
+              # Change the LED color.
+              if position > last_position:  # Advance forward through the colorwheel.
+                  color += 3
+                  state['settemp'] = setTemp + 0.5
+
+              else:
+                  color -= 3  # Advance backward through the colorwheel.
+                  state['settemp'] = setTemp - 0.5
+              color = (color + 256) % 256  # wrap around to 0-256
+              pixel.fill(colorwheel(color))
+
+          else:  # If the button is pressed...
+              # ...change the brightness.
+              if position > last_position:  # Increase the brightness.
+                  pixel.brightness = min(1.0, pixel.brightness + 0.1)
+              else:  # Decrease the brightness.
+                  pixel.brightness = max(0, pixel.brightness - 0.1)
+
+      last_position = position
+      sleep(0.05)
+
 def oled_display(dummy, state):
   from time import sleep
   from board import SCL, SDA
@@ -338,7 +394,7 @@ def oled_display(dummy, state):
   x = 0
 
   fontDefault = ImageFont.load_default()
-  font2 = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 32)
+  font2 = ImageFont.truetype('/home/pi/nintendo-ds.ttf', 16)
 
   draw.text((x, top+0), "CoffeePi", font=fontDefault, fill=255)
 
@@ -404,10 +460,14 @@ def oled_display(dummy, state):
 
   while True:
     currentTemp = str(round(state['avgtemp'],1))
+    targetTemp = str(round(state['settemp'],1))
 
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    draw.text((x, top+0), "Boiler Temp:", font=fontDefault, fill=255)
-    draw.text((x+8, top+8), currentTemp+" C", font=font2, fill=255)
+    draw.text((x, top+0), "Target", font=font2, fill=255)
+    draw.text((x+42, top+0), targetTemp+" C", font=font2, fill=255)
+    draw.text((x, top+17), "Boiler", font=font2, fill=255)
+    draw.text((x+42, top+17), currentTemp+" C", font=font2, fill=255)
+
     if heartbeat == 0:
       #draw.rectangle((96, 16, 104, 24), outline=0, fill=255)
       coffee_anim(96, 8, 0)
@@ -419,7 +479,7 @@ def oled_display(dummy, state):
     disp.image(image)
     disp.show()
 
-    sleep(0.5)
+    sleep(0.1)
 
   return '';
 
@@ -461,6 +521,11 @@ if __name__ == '__main__':
 
   print("Starting OLED Display thread...")
   d = Process(target=oled_display,args=(1,pidstate))
+  d.daemon = True
+  d.start()
+
+  print("Starting Rotary Encoder thread...")
+  d = Process(target=rotary_encoder,args=(1,pidstate))
   d.daemon = True
   d.start()
 
